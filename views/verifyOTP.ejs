@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>OTP Field Form</title>
+
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css"
+        integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog=="
+        crossorigin="anonymous" />
+
+    <link rel="stylesheet" href="../public/assets/css/bootstrap.min.css">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: "Poppins", sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            background: #282a36;
+            height: 100vh;
+            color: #fff;
+        }
+
+        .otp-field {
+            display: flex;
+            gap: 10px; 
+        }
+
+        .otp-field input {
+            width: 40px;
+            height: 50px; 
+            font-size: 24px;
+            text-align: center;
+            border-radius: 5px;
+            border: 2px solid #55525c;
+            background: #21232d;
+            font-weight: bold;
+            color: #fff;
+            outline: none;
+            transition: all 0.1s;
+        }
+
+        .otp-field input:focus {
+            border: 2px solid #F5A623;
+            box-shadow: 0 0 2px 2px #F5A623;
+        }
+
+        .text-center {
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 10px;
+            font-size: 18px;
+            background-color: #F5A623;
+            border: none;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+
+    <% if(otpSend.length> 0){ %>
+        <div class="alert alert-success position-fixed start-50 translate-middle" style="z-index: 9999;top: 100px;" role="alert">
+            <%= otpSend %>
+        </div>
+    <% } %>
+
+    <form action="/verifyOTP" method="post">
+        <input type="text" name="id" value="<%= user._id %>" hidden>
+        <p>OTP sent on <%= user.email %></p>
+        <h1 style="color: white;">Enter OTP</h1>
+        
+        <div class="otp-field">
+            <input type="text" maxlength="1" name="otp[]" class="otp-box">
+            <input type="text" maxlength="1" name="otp[]" class="otp-box">
+            <input type="text" maxlength="1" name="otp[]" class="otp-box">
+            <input type="text" maxlength="1" name="otp[]" class="otp-box">
+            <input type="text" maxlength="1" name="otp[]" class="otp-box">
+            <input type="text" maxlength="1" name="otp[]" class="otp-box">
+        </div>
+
+        <div class="text-center">
+            <button type="submit">Verify OTP</button>
+        </div>
+    </form>
+
+    <script>
+        // Auto move focus to next input
+        const inputs = document.querySelectorAll(".otp-box");
+
+        inputs.forEach((input, index) => {
+            input.addEventListener("input", (e) => {
+                if (e.target.value.length === 1 && index < inputs.length - 1) {
+                    inputs[index + 1].focus();
+                }
+            });
+
+            input.addEventListener("keydown", (e) => {
+                if (e.key === "Backspace" && index > 0 && !e.target.value) {
+                    inputs[index - 1].focus();
+                }
+            });
+        });
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Product Admin - Dashboard HTML Template</title>
+
+    <%- include('comp/header-links') %>
+
+</head>
+
+<body id="reportsPage">
+    <div class="" id="home">
+
+        <%- include('comp/navbar') %>
+
+            <div class="container">
+                <div class="row">
+                    <div class="col">
+                        <p class="text-white mt-5 mb-5">Welcome back, <b>
+                                <%= user.username %>
+                            </b></p>
+                    </div>
+                </div>
+
+                <!-- row -->
+                <div class="row tm-content-row">
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 tm-block-col">
+                        <div class="tm-bg-primary-dark tm-block">
+                            <div class="tm-product-table-container">
+                                <table class="table table-hover tm-table-small tm-product-table">
+                                    <thead>
+                                        <tr style="text-align: center;">
+                                            <th scope="col">&nbsp;</th>
+                                            <th scope="col">PRODUCT IMAGE</th>
+                                            <th scope="col">PRODUCT NAME</th>
+                                            <th scope="col">PRICE</th>
+                                            <th scope="col">STOCK</th>
+                                            <th scope="col">EXPIRE DATE</th>
+                                            <th scope="col">&nbsp;</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <h2 class="tm-block-title" style="font-size: 28px;">Total Products :- <%=
+                                                products.length %>
+                                        </h2>
+                                        <% if(products.length> 0){ %>
+                                            <% products.forEach(product=> { %>
+                                                <tr style="text-align: center; vertical-align: middle;">
+                                                    <th scope="row"><input type="checkbox" /></th>
+                                                    <td class="tm-product-name">
+                                                        <img src="<%= product.productImage || '../assets/img/product-image.jpg' %>"
+                                                            alt="<%= product.pname %>" height="80">
+                                                    </td>
+                                                    <td class="tm-product-name">
+                                                        <%= product.pname %>
+                                                    </td>
+                                                    <td>
+                                                        <%= product.price %>
+                                                    </td>
+                                                    <td>
+                                                        <%= product.stock %>
+                                                    </td>
+                                                    <td>
+                                                        <%= new Date(product.expireDate).toLocaleDateString('en-GB') %>
+                                                    </td>
+                                                    <td>
+                                                        <a href="/products/edit/${product._id}"
+                                                            class="tm-product-delete-link"
+                                                            style="margin-right: 10px;color: white;">
+                                                            <i class="fas fa-edit"></i>
+                                                        </a>
+                                                        <a href="/products/delete/${product._id}"
+                                                            class="tm-product-delete-link">
+                                                            <i class="far fa-trash-alt tm-product-delete-icon"></i>
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                                <% }); %>
+                                                    <% }else{ %>
+                                                        <tr>
+                                                            <td style="text-align: center;">No Product Available.</td>
+                                                        </tr>
+                                                        <% } %>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 tm-block-col">
+                        <div class="tm-bg-primary-dark tm-block">
+                            <h2 class="tm-block-title">Performance</h2>
+                            <canvas id="barChart"></canvas>
+                        </div>
+                    </div> -->
+                    <!-- <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 tm-block-col">
+                        <div class="tm-bg-primary-dark tm-block tm-block-taller">
+                            <h2 class="tm-block-title">Storage Information</h2>
+                            <div id="pieChartContainer">
+                                <canvas id="pieChart" class="chartjs-render-monitor" width="200" height="200"></canvas>
+                            </div>
+                        </div>
+                    </div> -->
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 tm-block-col">
+                        <div class="tm-bg-primary-dark tm-block tm-block-taller tm-block-overflow">
+                            <h2 class="tm-block-title" style="font-size: 28px;">Recent Activity</h2>
+                            <% if(activities.length > 0){ %>
+                                <% activities.forEach((activity)=> { %>
+                                    <div class="tm-notification-items">
+                                        <div class="media tm-notification-item">
+                                            <div class="tm-gray-circle">
+                                                <img src="<%= activity.productId.productImage ? activity.productId.productImage : 'assets/img/notification-01.jpg' %>"
+                                                    alt="Avatar Image" class="rounded-circle" height="80">
+                                            </div>
+                                            <div class="media-body">
+                                                <p class="mb-2"><%= activity.status %></p>
+                                                <span class="tm-small tm-text-color-secondary"><%= new Date(activity.createdAt).toLocaleString('en-US', {
+                                                    weekday: 'long', year: 'numeric', month: 'long',
+                                                    day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: true,
+                                                  }) %></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <% }) %>
+                            <% }else{ %>
+                                <p class="tm-notification-link">No Recent Activities.</p>
+                            <% } %>
+                        </div>
+                    </div>
+                    <!-- <div class="col-12 tm-block-col">
+                        <div class="tm-bg-primary-dark tm-block tm-block-taller tm-block-scroll">
+                            <h2 class="tm-block-title">Orders List</h2>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">ORDER NO.</th>
+                                        <th scope="col">STATUS</th>
+                                        <th scope="col">OPERATORS</th>
+                                        <th scope="col">LOCATION</th>
+                                        <th scope="col">DISTANCE</th>
+                                        <th scope="col">START DATE</th>
+                                        <th scope="col">EST DELIVERY DUE</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <th scope="row"><b>#122349</b></th>
+                                        <td>
+                                            <div class="tm-status-circle moving">
+                                            </div>Moving
+                                        </td>
+                                        <td><b>Oliver Trag</b></td>
+                                        <td><b>London, UK</b></td>
+                                        <td><b>485 km</b></td>
+                                        <td>16:00, 12 NOV 2018</td>
+                                        <td>08:00, 18 NOV 2018</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row"><b>#122348</b></th>
+                                        <td>
+                                            <div class="tm-status-circle pending">
+                                            </div>Pending
+                                        </td>
+                                        <td><b>Jacob Miller</b></td>
+                                        <td><b>London, UK</b></td>
+                                        <td><b>360 km</b></td>
+                                        <td>11:00, 10 NOV 2018</td>
+                                        <td>04:00, 14 NOV 2018</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row"><b>#122347</b></th>
+                                        <td>
+                                            <div class="tm-status-circle cancelled">
+                                            </div>Cancelled
+                                        </td>
+                                        <td><b>George Wilson</b></td>
+                                        <td><b>London, UK</b></td>
+                                        <td><b>340 km</b></td>
+                                        <td>12:00, 22 NOV 2018</td>
+                                        <td>06:00, 28 NOV 2018</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row"><b>#122346</b></th>
+                                        <td>
+                                            <div class="tm-status-circle moving">
+                                            </div>Moving
+                                        </td>
+                                        <td><b>William Aung</b></td>
+                                        <td><b>London, UK</b></td>
+                                        <td><b>218 km</b></td>
+                                        <td>15:00, 10 NOV 2018</td>
+                                        <td>09:00, 14 NOV 2018</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row"><b>#122345</b></th>
+                                        <td>
+                                            <div class="tm-status-circle pending">
+                                            </div>Pending
+                                        </td>
+                                        <td><b>Harry Ryan</b></td>
+                                        <td><b>London, UK</b></td>
+                                        <td><b>280 km</b></td>
+                                        <td>15:00, 11 NOV 2018</td>
+                                        <td>09:00, 17 NOV 2018</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row"><b>#122344</b></th>
+                                        <td>
+                                            <div class="tm-status-circle pending">
+                                            </div>Pending
+                                        </td>
+                                        <td><b>Michael Jones</b></td>
+                                        <td><b>London, UK</b></td>
+                                        <td><b>218 km</b></td>
+                                        <td>18:00, 12 OCT 2018</td>
+                                        <td>06:00, 18 OCT 2018</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row"><b>#122343</b></th>
+                                        <td>
+                                            <div class="tm-status-circle moving">
+                                            </div>Moving
+                                        </td>
+                                        <td><b>Timmy Davis</b></td>
+                                        <td><b>London, UK</b></td>
+                                        <td><b>218 km</b></td>
+                                        <td>12:00, 10 OCT 2018</td>
+                                        <td>08:00, 18 OCT 2018</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row"><b>#122342</b></th>
+                                        <td>
+                                            <div class="tm-status-circle moving">
+                                            </div>Moving
+                                        </td>
+                                        <td><b>Oscar Phyo</b></td>
+                                        <td><b>London, UK</b></td>
+                                        <td><b>420 km</b></td>
+                                        <td>15:30, 06 OCT 2018</td>
+                                        <td>09:30, 16 OCT 2018</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row"><b>#122341</b></th>
+                                        <td>
+                                            <div class="tm-status-circle moving">
+                                            </div>Moving
+                                        </td>
+                                        <td><b>Charlie Brown</b></td>
+                                        <td><b>London, UK</b></td>
+                                        <td><b>300 km</b></td>
+                                        <td>11:00, 10 OCT 2018</td>
+                                        <td>03:00, 14 OCT 2018</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row"><b>#122340</b></th>
+                                        <td>
+                                            <div class="tm-status-circle cancelled">
+                                            </div>Cancelled
+                                        </td>
+                                        <td><b>Wilson Cookies</b></td>
+                                        <td><b>London, UK</b></td>
+                                        <td><b>218 km</b></td>
+                                        <td>17:30, 12 OCT 2018</td>
+                                        <td>08:30, 22 OCT 2018</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row"><b>#122339</b></th>
+                                        <td>
+                                            <div class="tm-status-circle moving">
+                                            </div>Moving
+                                        </td>
+                                        <td><b>Richard Clamon</b></td>
+                                        <td><b>London, UK</b></td>
+                                        <td><b>150 km</b></td>
+                                        <td>15:00, 12 OCT 2018</td>
+                                        <td>09:20, 26 OCT 2018</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div> -->
+                </div>
+            </div>
+            <footer class="tm-footer row tm-mt-small">
+                <div class="col-12 font-weight-light">
+                    <p class="text-center text-white mb-0 px-4 small">
+                        Copyright &copy; <b>2018</b> All rights reserved.
+
+                        Design: <a rel="nofollow noopener" href="https://templatemo.com" class="tm-footer-link">Template
+                            Mo</a>
+                    </p>
+                </div>
+            </footer>
+    </div>
+
+    <%- include('comp/footer-links') %>
+
+        <script>
+            Chart.defaults.global.defaultFontColor = 'white';
+            let ctxLine,
+                ctxBar,
+                ctxPie,
+                optionsLine,
+                optionsBar,
+                optionsPie,
+                configLine,
+                configBar,
+                configPie,
+                lineChart;
+            barChart, pieChart;
+            // DOM is ready
+            $(function () {
+                drawLineChart(); // Line Chart
+                drawBarChart(); // Bar Chart
+                drawPieChart(); // Pie Chart
+
+                $(window).resize(function () {
+                    updateLineChart();
+                    updateBarChart();
+                });
+            })
+        </script>
+</body>
+
+</html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <title>Add Product - Dashboard HTML Template</title>
+
+  <%- include('comp/header-links') %>
+
+</head>
+
+<body>
+
+  <%- include('comp/navbar') %>
+
+    <div class="container tm-mt-big tm-mb-big">
+      <div class="row">
+        <div class="col-xl-9 col-lg-10 col-md-12 col-sm-12 mx-auto">
+          <div class="tm-bg-primary-dark tm-block tm-block-h-auto">
+            <div class="row">
+              <div class="col-12">
+                <h2 class="tm-block-title d-inline-block" style="font-size: 28px;">Edit Product</h2>
+              </div>
+            </div>
+            <form action="/products/edit/<%= product._id %>" method="post" enctype="multipart/form-data">
+              <div class="row">
+                <div class="col-xl-6 col-lg-6 col-md-12">
+                  <div class="form-group mb-3">
+                    <label for="name">Product Name </label>
+                    <input id="name" name="pname" type="text" class="form-control validate" value="<%= product.pname %>" required />
+                  </div>
+                  <div class="form-group mb-3">
+                    <label for="description">Description</label>
+                    <textarea class="form-control validate" name="description" rows="3" required><%= product.description %></textarea>
+                  </div>
+                  <div class="form-group mb-3">
+                    <label for="category">Category</label>
+                    <select class="custom-select tm-select-accounts" id="category" name="category">
+                      <option value="-1">Select Category</option>
+                      <option value="1" <%= product.category == '1' ? 'selected' : '' %>>New Arrival</option>
+                      <option value="2" <%= product.category == '2' ? 'selected' : '' %>>Most Popular</option>
+                      <option value="3" <%= product.category == '3' ? 'selected' : '' %>>Trending</option>
+                    </select>
+                  </div>
+                  <div class="row">
+                    <div class="form-group mb-3 col-xs-12 col-sm-6">
+                      <label for="expireDate">Expire Date
+                      </label>
+                      <input id="expireDate" name="expireDate" type="date" class="form-control validate"
+                        data-large-mode="true" value="<%= product.expireDate ? new Date(product.expireDate).toISOString().split('T')[0] : '' %>" />
+                    </div>
+                    <div class="form-group mb-3 col-xs-12 col-sm-6">
+                      <label for="stock">Units In Stock
+                      </label>
+                      <input id="stock" name="stock" type="number" min="1" class="form-control validate" value="<%= product.stock %>" required />
+                    </div>
+                  </div>
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-12 mx-auto mb-4">
+                  <div class="tm-product-img-dummy mx-auto position-relative">
+                    <img id="productImg" height="240" style="width: 100%;">
+                    <div class="img-upload-btn position-absolute" style="cursor: pointer;">
+                      <i class="fas fa-cloud-upload-alt tm-upload-icon"
+                        onclick="document.getElementById('fileInput').click();"></i>
+                    </div>
+                  </div>
+                  <div class="custom-file mt-3 mb-3">
+                    <input id="fileInput" type="file" style="display:none;" name="productImage" />
+                    <input type="button" class="btn btn-primary btn-block mx-auto" value="UPLOAD PRODUCT IMAGE"
+                      onclick="document.getElementById('fileInput').click();" />
+                  </div>
+                  <div class="form-group mt-5 col-xs-12 col-sm-6">
+                    <label for="price">Price</label>
+                    <input id="price" name="price" type="number" min="1" class="form-control validate" value="<%= product.price %>" required />
+                  </div>
+                </div>
+              </div>
+
+              <button type="submit" class="btn btn-primary btn-block text-uppercase">Update Product Now</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <%- include('comp/footer-links') %>
+
+      <script>
+        $(function () {
+          $("#expire_date").datepicker();
+        });
+
+        document.getElementById('fileInput').addEventListener('change', function (event) {
+
+          const file = event.target.files[0];
+          const uploadIcon = document.querySelector('.img-upload-btn');
+
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+
+              document.getElementById('productImg').src = e.target.result;
+
+              document.getElementById('productImg').alt = 'Product Image';
+
+              uploadIcon.style.display = 'none';
+            };
+            reader.readAsDataURL(file);
+          }
+        });
+      </script>
+
+</body>
+
+</html>

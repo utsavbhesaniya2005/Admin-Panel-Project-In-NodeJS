@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Login Page - Product Admin Template</title>
+
+    <%- include('comp/header-links') %>
+
+</head>
+
+<body class="d-flex align-items-center justify-content-center" style="height: 100vh;">
+
+    <div class="container">
+        <div class="row">
+            <div class="col-12 mx-auto tm-login-col">
+                <div class="tm-bg-primary-dark tm-block tm-block-h-auto">
+                    <div class="row">
+                        <div class="col-12 text-center">
+                            <h2 class="tm-block-title mb-4" style="font-size: 28px;">Forgot Password Page</h2>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-12">
+                            <form action="/verifyUser" method="post" class="tm-login-form">
+                                <div class="form-group">
+                                    <label for="email">Email</label>
+                                    <input name="email" type="text" class="form-control validate" id="email" required />
+                                </div>
+                                <div class="form-group mt-4 mb-0">
+                                    <button type="submit" class="btn btn-primary btn-block text-uppercase">
+                                        Verify Email
+                                    </button>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <%- include('comp/footer-links') %>
+
+</body>
+
+</html>

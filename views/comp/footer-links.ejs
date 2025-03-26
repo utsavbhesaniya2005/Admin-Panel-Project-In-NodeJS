@@ -1,0 +1,31 @@
+<script src="../assets/js/jquery-3.3.1.min.js"></script>
+
+<!-- https://jquery.com/download/ -->
+<script src="../assets/js/moment.min.js"></script>
+
+<!-- https://momentjs.com/ -->
+<script src="../assets/js/Chart.min.js"></script>
+
+<!-- http://www.chartjs.org/docs/latest/ -->
+<script src="../assets/js/bootstrap.min.js"></script>
+
+<!-- https://getbootstrap.com/ -->
+<script src="../assets/js/tooplate-scripts.js"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        let navLinks = document.querySelectorAll(".nav-link");
+
+        function removeActiveClasses() {
+            navLinks.forEach(link => link.classList.remove("active"));
+        }
+
+        navLinks.forEach(link => {
+            link.addEventListener("click", function () {
+                removeActiveClasses();
+                this.classList.add("active");
+            });
+        });
+    });
+</script>
