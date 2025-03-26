@@ -22,4 +22,10 @@ productRoute.post('/edit/:id', uploads.single('productImage'), productController
 // Product Delete In Database
 productRoute.get('/delete/:id', productController.deleteProduct);
 
+// All Selected Product Delete
+productRoute.post('/deleteAll', productController.deleteAll);
+
+// Activity Log Deleted
+productRoute.get('/activity/delete/:id', productController.deleteActivity);
+
 module.exports = productRoute;

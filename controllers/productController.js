@@ -95,18 +95,55 @@ const deleteProduct = async (req, res) => {
         console.log('Product Image Deleted.');
     });
 
-    await Product.findByIdAndDelete(req.params.id);
-
+    
     await Activity.create({
-
+        
         status : 'Product Deleted',
         productId : req.params.id,
     });
+    
+    await Product.findByIdAndDelete(req.params.id);
 
     console.log('Product Deleted.');
 
     res.redirect('/');
 }
 
+const deleteAll = async (req, res) => {
 
-module.exports = { allProducts, add, saveProduct, edit, update, deleteProduct };
+    const { productIds } = req.body;
+
+    const productIdArray = productIds.split(' ');    
+    
+    productIdArray.forEach(async (productId) => {
+
+        let findProductImg = await Product.findById({_id : productId });
+
+        if(findProductImg){
+
+            fs.unlink(findProductImg.productImage, (err) => {
+
+                console.log('Product Image Deleted.');
+            });
+    
+            await Activity.create({
+    
+                status : 'Product Deleted',
+                productId : productId,
+            });
+                    
+            await Product.deleteMany({_id : { $in : productId } });
+        }
+    });
+
+    res.redirect('/');
+}
+
+const deleteActivity = async (req, res) => {
+
+    await Activity.findByIdAndDelete(req.params.id);
+
+    res.redirect('/');
+}
+
+module.exports = { allProducts, add, saveProduct, edit, update, deleteProduct, deleteAll, deleteActivity };

@@ -48,11 +48,16 @@
                 </tbody>
               </table>
             </div>
+            
             <!-- table container -->
             <a href="/products/add" class="btn btn-primary btn-block text-uppercase mb-3">Add new product</a>
-            <button class="btn btn-primary btn-block text-uppercase">
-              Delete selected products
-            </button>
+
+            <form id="deleteForm" action="/products/deleteAll" method="post">
+              <input type="text" name="productIds" id="productIdsInput" hidden />
+              <button type="submit" class="btn btn-primary btn-block text-uppercase deleteAll">
+                Delete selected products
+              </button>
+            </form>
           </div>
         </div>
         <!-- <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4 tm-block-col">
@@ -160,15 +165,6 @@
         </div> -->
       </div>
     </div>
-    <footer class="tm-footer row tm-mt-small">
-      <div class="col-12 font-weight-light">
-        <p class="text-center text-white mb-0 px-4 small">
-          Copyright &copy; <b>2018</b> All rights reserved.
-
-          Design: <a rel="nofollow noopener" href="https://templatemo.com" class="tm-footer-link">Template Mo</a>
-        </p>
-      </div>
-    </footer>
 
     <%- include('comp/footer-links') %>
 
@@ -182,31 +178,30 @@
           if(products.length > 0){
             products.forEach(product => {
               tableBody.innerHTML += `
-              <tr style="text-align: center; vertical-align: middle;">
-                <th scope="row"><input type="checkbox" /></th>
-                <td class="tm-product-name">
-                  <img src="../${product.productImage || '../assets/img/product-image.jpg'}" alt="${product.pname}" height="80">  
-                </td>
-                <td class="tm-product-name">${product.pname}</td>
-                <td>${product.price}</td>
-                <td>${product.stock}</td>
-                <td>${new Date(product.expireDate).toLocaleDateString('en-GB')}</td>
-                <td>
-                  <a href="/products/edit/${product._id}" class="tm-product-delete-link" style="margin-right: 10px;color: white;">
-                    <i class="fas fa-edit"></i>
-                  </a>
-                  <a href="/products/delete/${product._id}" class="tm-product-delete-link">
-                    <i class="far fa-trash-alt tm-product-delete-icon"></i>
-                  </a>
-                </td>
-              </tr>
-            `;
+                <tr style="text-align: center; vertical-align: middle;">
+                  <th scope="row"><input type="checkbox" class="product-checkbox" data-id="${product._id}" /></th>
+                  <td class="tm-product-name">
+                    <img src="../${product.productImage || '../assets/img/product-image.jpg'}" alt="${product.pname}" height="80">  
+                  </td>
+                  <td class="tm-product-name">${product.pname}</td>
+                  <td>${product.price}</td>
+                  <td>${product.stock}</td>
+                  <td>${new Date(product.expireDate).toLocaleDateString('en-GB')}</td>
+                  <td>
+                    <a href="/products/edit/${product._id}" class="tm-product-delete-link" style="margin-right: 10px;color: white;">
+                      <i class="fas fa-edit"></i>
+                    </a>
+                    <a href="/products/delete/${product._id}" class="tm-product-delete-link">
+                      <i class="far fa-trash-alt tm-product-delete-icon"></i>
+                    </a>
+                  </td>
+                </tr>`
             });
-          }else{
+          } else {
             tableBody.innerHTML = `<tr><td colspan="7" style="text-align: center;">No Product Available.</td></tr>`;
           }
 
-          searchInput.addEventListener("keyup", function () {
+          searchInput.addEventListener("keyup", function(){
 
             const query = searchInput.value.toLowerCase().trim();
 
@@ -216,34 +211,61 @@
 
             tableBody.innerHTML = "";
 
-            if (filteredProducts.length === 0) {
+            if(filteredProducts.length === 0){
               tableBody.innerHTML = `<tr><td colspan="7" style="text-align: center;">No Product Available.</td></tr>`;
               return;
             }
 
             filteredProducts.forEach(product => {
               tableBody.innerHTML += `
-              <tr style="text-align: center; vertical-align: middle;">
-                <th scope="row"><input type="checkbox" /></th>
-                <td class="tm-product-name">
-                  <img src="../${product.productImage || '../assets/img/product-image.jpg'}" alt="${product.pname}" height="80">  
-                </td>
-                <td class="tm-product-name">${product.pname}</td>
-                <td>${product.price}</td>
-                <td>${product.stock}</td>
-                <td>${new Date(product.expireDate).toLocaleDateString('en-GB')}</td>
-                <td>
-                  <a href="/products/edit/${product._id}" class="tm-product-delete-link" style="margin-right: 10px;color: white;">
-                    <i class="fas fa-edit"></i>
-                  </a>
-                  <a href="/products/delete/${product._id}" class="tm-product-delete-link">
-                    <i class="far fa-trash-alt tm-product-delete-icon"></i>
-                  </a>
-                </td>
-              </tr>
-            `;
+                <tr style="text-align: center; vertical-align: middle;">
+                  <th scope="row"><input type="checkbox" class="product-checkbox" data-id="${product._id}" /></th>
+                  <td class="tm-product-name">
+                    <img src="../${product.productImage || '../assets/img/product-image.jpg'}" alt="${product.pname}" height="80">  
+                  </td>
+                  <td class="tm-product-name">${product.pname}</td>
+                  <td>${product.price}</td>
+                  <td>${product.stock}</td>
+                  <td>${new Date(product.expireDate).toLocaleDateString('en-GB')}</td>
+                  <td>
+                    <a href="/products/edit/${product._id}" class="tm-product-delete-link" style="margin-right: 10px;color: white;">
+                      <i class="fas fa-edit"></i>
+                    </a>
+                    <a href="/products/delete/${product._id}" class="tm-product-delete-link">
+                      <i class="far fa-trash-alt tm-product-delete-icon"></i>
+                    </a>
+                  </td>
+                </tr>`
             });
           });
+
+          let selectedProductIds = []; 
+          const checkboxes = document.querySelectorAll(".product-checkbox");
+          const productIdsInput = document.getElementById("productIdsInput");
+          const deleteForm = document.getElementById("deleteForm");
+
+          function updateSelectedProducts(){
+
+            selectedProductIds = Array.from(document.querySelectorAll(".product-checkbox:checked")).map(checkbox => checkbox.getAttribute("data-id"));
+            
+            productIdsInput.value = selectedProductIds.join(" ");
+          }
+
+          checkboxes.forEach(checkbox => {
+
+            checkbox.addEventListener("change", updateSelectedProducts);
+          });
+
+          deleteForm.addEventListener("submit", function(event){
+
+            if(selectedProductIds.length === 0){
+
+              event.preventDefault();
+              alert("Please select at least one product to delete.");
+            }
+          });
+
+          productIdsInput.innerHTML = "";
 
         });
       </script>
