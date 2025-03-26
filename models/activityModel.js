@@ -6,10 +6,6 @@ const activitySchema = mongoose.Schema({
         type : Date,
         default : Date.now,
     },
-    updatedAt : {
-        type : Date,
-        default : Date.now,
-    },
     status : {
         type : String,
     },

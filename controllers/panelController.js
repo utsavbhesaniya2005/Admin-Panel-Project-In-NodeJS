@@ -15,7 +15,7 @@ const home = async (req, res) => {
 
     let products = await Product.find({});
 
-    let activities = await Activity.find({}).populate('productId', 'productImage');
+    let activities = await Activity.find({}).populate('productId', 'productImage pname').sort({ createdAt : -1 });
 
     let msg = req.flash('success');
 

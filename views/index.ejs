@@ -28,7 +28,7 @@
                 <!-- row -->
                 <div class="row tm-content-row">
                     <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 tm-block-col">
-                        <div class="tm-bg-primary-dark tm-block">
+                        <div class="tm-bg-primary-dark tm-block mb-5">
                             <div class="tm-product-table-container">
                                 <table class="table table-hover tm-table-small tm-product-table">
                                     <thead>
@@ -42,7 +42,7 @@
                                             <th scope="col">&nbsp;</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
+                                    <tbody class="tm-block-products">
                                         <h2 class="tm-block-title" style="font-size: 28px;">Total Products :- <%=
                                                 products.length %>
                                         </h2>
@@ -67,23 +67,23 @@
                                                         <%= new Date(product.expireDate).toLocaleDateString('en-GB') %>
                                                     </td>
                                                     <td>
-                                                        <a href="/products/edit/${product._id}"
+                                                        <a href="/products/edit/<%= product._id %>"
                                                             class="tm-product-delete-link"
                                                             style="margin-right: 10px;color: white;">
                                                             <i class="fas fa-edit"></i>
                                                         </a>
-                                                        <a href="/products/delete/${product._id}"
+                                                        <a href="/products/delete/<%= product._id %>"
                                                             class="tm-product-delete-link">
                                                             <i class="far fa-trash-alt tm-product-delete-icon"></i>
                                                         </a>
                                                     </td>
                                                 </tr>
-                                                <% }); %>
-                                                    <% }else{ %>
-                                                        <tr>
-                                                            <td style="text-align: center;">No Product Available.</td>
-                                                        </tr>
-                                                        <% } %>
+                                            <% }); %>
+                                        <% }else{ %>
+                                            <tr>
+                                                <td style="text-align: center;">No Product Available.</td>
+                                            </tr>
+                                        <% } %>
                                     </tbody>
                                 </table>
                             </div>
@@ -106,27 +106,43 @@
                     <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 tm-block-col">
                         <div class="tm-bg-primary-dark tm-block tm-block-taller tm-block-overflow">
                             <h2 class="tm-block-title" style="font-size: 28px;">Recent Activity</h2>
-                            <% if(activities.length > 0){ %>
+                            <% if(activities.length> 0){ %>
                                 <% activities.forEach((activity)=> { %>
                                     <div class="tm-notification-items">
-                                        <div class="media tm-notification-item">
+                                        <div class="media tm-notification-item" style="align-items: center !important;">
                                             <div class="tm-gray-circle">
                                                 <img src="<%= activity.productId.productImage ? activity.productId.productImage : 'assets/img/notification-01.jpg' %>"
                                                     alt="Avatar Image" class="rounded-circle" height="80">
                                             </div>
                                             <div class="media-body">
-                                                <p class="mb-2"><%= activity.status %></p>
-                                                <span class="tm-small tm-text-color-secondary"><%= new Date(activity.createdAt).toLocaleString('en-US', {
-                                                    weekday: 'long', year: 'numeric', month: 'long',
-                                                    day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: true,
-                                                  }) %></span>
+                                                <p class="mb-2">
+                                                    <%= activity.status %>
+                                                </p>
+                                                <h2 class="mb-2" style="font-size: 22px;">
+                                                    <b>Name :-</b> <%= activity.productId.pname %>
+                                                </h2>
+                                                <!-- <span class="tm-small tm-text-color-secondary">
+                                                    <%= new Date(activity.createdAt).toLocaleString('en-US', {
+                                                        weekday: 'long' , year: 'numeric' , month: 'long' ,
+                                                        day: 'numeric' , hour: 'numeric' , minute: 'numeric' ,
+                                                        second: 'numeric' , hour12: true, }) %>
+                                                </span> -->
+                                                <span class="tm-small tm-text-color-secondary"
+                                                    data-time="<%= activity.createdAt %>"></span>
+                                                <time class="timeago" datetime="<%= activity.createdAt %>"></time>
+                                            </div>
+                                            <div class="actions">
+                                                <a href="/products/delete/<%= activity.productId._id %>"
+                                                    class="tm-product-delete-link">
+                                                    <i class="far fa-trash-alt tm-product-delete-icon"></i>
+                                                </a>
                                             </div>
                                         </div>
-                                    </div>
-                                <% }) %>
-                            <% }else{ %>
-                                <p class="tm-notification-link">No Recent Activities.</p>
-                            <% } %>
+                                    </div><hr>
+                                    <% }) %>
+                                <% }else{ %>
+                                    <p class="tm-notification-link">No Recent Activities.</p>
+                                <% } %>
                         </div>
                     </div>
                     <!-- <div class="col-12 tm-block-col">
@@ -297,6 +313,13 @@
 
     <%- include('comp/footer-links') %>
 
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                document.querySelectorAll('[data-time]').forEach(el => {
+                    el.innerText = moment(el.getAttribute('data-time')).fromNow();
+                });
+            });
+        </script>
         <script>
             Chart.defaults.global.defaultFontColor = 'white';
             let ctxLine,

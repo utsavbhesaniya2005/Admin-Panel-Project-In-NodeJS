@@ -59,11 +59,8 @@ button:focus {
 .tm-mt-small {
   margin-top: 20px;
 }
-.tm-block-col {
-  margin-bottom: 30px;
-}
 .tm-block {
-  padding: 40px;
+  padding: 30px;
   -webkit-box-shadow: 1px 1px 5px 0 #455c71;
   -moz-box-shadow: 1px 1px 5px 0 #455c71;
   box-shadow: 1px 1px 5px 0 #455c71;
@@ -432,8 +429,9 @@ input[type="checkbox"]:focus {
   outline: 0 none;
   box-shadow: none;
 }
-.tm-block-products {
-  min-height: 725px;
+.tm-block-products{
+  overflow-x: scroll;
+  height: 95%;
 }
 .tm-block-product-categories {
   min-height: 650px;

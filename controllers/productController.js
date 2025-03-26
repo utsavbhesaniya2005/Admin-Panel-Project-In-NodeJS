@@ -38,14 +38,13 @@ const saveProduct = async (req, res) => {
         });
 
         await Activity.create({
-            status : 'Product Added.',
-            updatedAt : null,
+            status : 'New Product Added.',
             productId : newProduct._id,
         });
 
         console.log('Product Added & Activity Added.');
 
-        res.redirect('/products');
+        res.redirect('/');
 
     } catch (err) {
 
@@ -76,9 +75,15 @@ const update = async (req, res) => {
 
     await Product.findByIdAndUpdate(req.params.id, data);
 
+    await Activity.create({
+
+        status : 'Product Updated',
+        productId : req.params.id,
+    });
+
     console.log("Product Updated.");
 
-    res.redirect('/products');
+    res.redirect('/');
 }
 
 const deleteProduct = async (req, res) => {
@@ -87,14 +92,20 @@ const deleteProduct = async (req, res) => {
 
     fs.unlink(findProductImg.productImage, (err) => {
 
-        console.log('Blog Image Updated.');
+        console.log('Product Image Deleted.');
     });
 
     await Product.findByIdAndDelete(req.params.id);
 
+    await Activity.create({
+
+        status : 'Product Deleted',
+        productId : req.params.id,
+    });
+
     console.log('Product Deleted.');
 
-    res.redirect('/products');
+    res.redirect('/');
 }
 
 

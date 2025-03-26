@@ -67,7 +67,7 @@
                     </div>
                   </div>
                   <div class="custom-file mt-3 mb-3">
-                    <input id="fileInput" type="file" style="display:none;" name="productImage" />
+                    <input id="fileInput" type="file" name="productImage" hidden />
                     <input type="button" class="btn btn-primary btn-block mx-auto" value="UPLOAD PRODUCT IMAGE"
                       onclick="document.getElementById('fileInput').click();" />
                   </div>
@@ -88,18 +88,15 @@
     <%- include('comp/footer-links') %>
 
       <script>
-        $(function () {
-          $("#expire_date").datepicker();
-        });
 
         document.getElementById('fileInput').addEventListener('change', function (event) {
 
           const file = event.target.files[0];
           const uploadIcon = document.querySelector('.img-upload-btn');
 
-          if (file) {
+          if(file){
             const reader = new FileReader();
-            reader.onload = function (e) {
+            reader.onload = function(e){
 
               document.getElementById('productImg').src = e.target.result;
 
