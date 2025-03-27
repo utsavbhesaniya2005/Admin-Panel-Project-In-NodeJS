@@ -9,7 +9,7 @@ const allProducts = async (req, res) => {
     user = req.user;
 
     let products = await Product.find({});
-    
+
     res.render('allProducts', { user, products });
 }
 
@@ -32,14 +32,14 @@ const saveProduct = async (req, res) => {
             category,
             expireDate,
             stock,
-            productImage : path,
+            productImage: path,
             price,
             adminId: user.id,
         });
 
         await Activity.create({
-            status : 'New Product Added.',
-            productId : newProduct._id,
+            status: 'New Product Added.',
+            productId: newProduct._id,
         });
 
         console.log('Product Added & Activity Added.');
@@ -77,8 +77,8 @@ const update = async (req, res) => {
 
     await Activity.create({
 
-        status : 'Product Updated',
-        productId : req.params.id,
+        status: 'Product Updated',
+        productId: req.params.id,
     });
 
     console.log("Product Updated.");
@@ -95,13 +95,13 @@ const deleteProduct = async (req, res) => {
         console.log('Product Image Deleted.');
     });
 
-    
+
     await Activity.create({
-        
-        status : 'Product Deleted',
-        productId : req.params.id,
+
+        status: 'Product Deleted',
+        productId: req.params.id,
     });
-    
+
     await Product.findByIdAndDelete(req.params.id);
 
     console.log('Product Deleted.');
@@ -111,32 +111,39 @@ const deleteProduct = async (req, res) => {
 
 const deleteAll = async (req, res) => {
 
-    const { productIds } = req.body;
+    try {
 
-    const productIdArray = productIds.split(' ');    
+        const { productIds } = req.body;
+
+        const productIdArray = productIds.split(' ');
+
+        productIdArray.forEach(async (productId) => {
+
+            let findProductImg = await Product.findById({ _id: productId });
+
+            if (findProductImg) {
+
+                fs.unlink(findProductImg.productImage, (err) => {
+
+                    console.log('Product Image Deleted.');
+                });
+
+                await Activity.create({
+
+                    status: 'Product Deleted',
+                    productId: productId,
+                });
+
+                await Product.deleteMany({ _id: { $in: productId } });
+
+            }
+        });
     
-    productIdArray.forEach(async (productId) => {
+        res.redirect('/');
+    }catch(err){
 
-        let findProductImg = await Product.findById({_id : productId });
-
-        if(findProductImg){
-
-            fs.unlink(findProductImg.productImage, (err) => {
-
-                console.log('Product Image Deleted.');
-            });
-    
-            await Activity.create({
-    
-                status : 'Product Deleted',
-                productId : productId,
-            });
-                    
-            await Product.deleteMany({_id : { $in : productId } });
-        }
-    });
-
-    res.redirect('/');
+        console.log('Selected Product Delete Error.');
+    }
 }
 
 const deleteActivity = async (req, res) => {
