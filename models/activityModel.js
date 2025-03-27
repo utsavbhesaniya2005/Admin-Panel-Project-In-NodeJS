@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const activitySchema = mongoose.Schema({
+const activitySchema = await mongoose.Schema({
 
     createdAt : {
         type : Date,
